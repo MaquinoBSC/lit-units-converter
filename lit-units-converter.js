@@ -14,7 +14,8 @@ class LitUnitsConverter extends LitElement {
             toUnits: { type: Array },
             selectedToUnit: { type: Object },
             history: { type: Array },
-            isToSelectDisabled: { type: Boolean }
+            isToSelectDisabled: { type: Boolean },
+            result: { type: Number }
         }
     }
 
@@ -42,9 +43,19 @@ class LitUnitsConverter extends LitElement {
             }
             if(type === 'to') this.selectedToUnit = this.toUnits[detail.index];
         }
+    }
 
-        console.log(this.selectedFromUnit);
-        console.log(this.selectedToUnit);
+    get _lengthInput() {
+        return this.shadowRoot.getElementById('length-input');
+    }
+
+    _converter() {
+        const lengthInput = parseFloat(this._lengthInput.value);
+        if(this.selectedFromUnit.value === 'mm') {
+            if(this.selectedToUnit.value === 'cm') {
+                this.result = lengthInput / 10;
+            }
+        }
     }
 
     render() {
@@ -52,7 +63,7 @@ class LitUnitsConverter extends LitElement {
             <div>
                 <h1>Convertirdor de unidades</h1>
                 <div>
-                    <mwc-textfield label="Ingresa longitud"></mwc-textfield>
+                    <mwc-textfield label="Ingresa longitud" id="length-input"></mwc-textfield>
                     <span>De: </span>
                     <mwc-select @selected=${ (e) => this._selectedUnit(e, 'from') }>
                         ${
@@ -69,6 +80,7 @@ class LitUnitsConverter extends LitElement {
                             `)
                         }
                     </mwc-select>
+                    <mwc-button raised @click=${ () => this._converter() } >Convertir</mwc-button>
                 </div>
             </div>
         `;
